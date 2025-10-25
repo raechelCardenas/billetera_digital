@@ -147,8 +147,7 @@ En caso de error `success` es `false`, `data` se establece en `null` y se incluy
 Todas las operaciones exponen mensajes claros y códigos de negocio (`CLIENT_REGISTERED`, `WALLET_RECHARGED`, `PAYMENT_SESSION_CREATED`, `PAYMENT_CONFIRMED`, `WALLET_BALANCE`) o de error (`CLIENT_EXISTS`, `INSUFFICIENT_FUNDS`, etc.), cumpliendo con el estándar de respuestas solicitado.
 
 ## Colección Postman
-
-Puedes documentar y compartir los endpoints creando una colección en Postman o tu herramienta favorita. Los puntos mencionados arriba son los que deben cubrirse (registro, recarga, generación/confirmación de pago y consulta de saldo).
+- Colección incluida: `docs/postman/ePaycoWallet.postman_collection.json` (configura la variable `base_url` si cambias el puerto o el host del API).
 
 ## Scripts útiles
 
@@ -156,5 +155,4 @@ Puedes documentar y compartir los endpoints creando una colección en Postman o 
 - `npm run prisma:migrate` (db-service) – Crea nueva migración (requiere conexión activa a MySQL).
 - `npm run prisma:migrate:deploy` (db-service) – Aplica migraciones existentes a la BD indicada.
 - `npm run dev` – Disponible en los tres proyectos para modo desarrollo con recarga automática.
-
 

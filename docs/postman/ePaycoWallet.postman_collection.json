@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "ePayco Wallet",
+    "description": "Colección oficial para probar los servicios públicos del reto ePayco Wallet.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "Registrar cliente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"document\": \"123456789\",\n  \"fullName\": \"Cliente Demo\",\n  \"email\": \"cliente.demo@example.com\",\n  \"phone\": \"3001234567\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/clients",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "clients"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Recargar billetera",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"document\": \"123456789\",\n  \"phone\": \"3001234567\",\n  \"amount\": 200000,\n  \"metadata\": {\n    \"reference\": \"REC-001\",\n    \"notes\": \"Recarga inicial\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/wallets/recharge",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "wallets",
+            "recharge"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generar compra",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"document\": \"123456789\",\n  \"phone\": \"3001234567\",\n  \"amount\": 150000,\n  \"description\": \"Compra en línea\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/payments/initiate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "payments",
+            "initiate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Confirmar pago",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/payments/confirm",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "payments",
+            "confirm"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar saldo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/wallets/balance?document=123456789&phone=3001234567",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "wallets",
+            "balance"
+          ],
+          "query": [
+            {
+              "key": "document",
+              "value": "123456789"
+            },
+            {
+              "key": "phone",
+              "value": "3001234567"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": []
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": []
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:4000/api/v1"
+    }
+  ]
+}
