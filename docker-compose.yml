@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: epayco_wallet
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db-service:
+    build:
+      context: ./services/db-service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql://root:root@mysql:3306/epayco_wallet
+      DB_SERVICE_PORT: 4001
+      PAYMENT_TOKEN_EXPIRY_MINUTES: 10
+    ports:
+      - "4001:4001"
+
+  api-service:
+    build:
+      context: ./services/api-service
+    depends_on:
+      - db-service
+    environment:
+      DB_SERVICE_BASE_URL: http://db-service:4001/internal/v1
+      API_SERVICE_PORT: 4000
+      APP_NAME: "ePayco Wallet API"
+      EMAIL_ENABLED: "true"
+      EMAIL_HOST: "smtp.gmail.com"
+      EMAIL_PORT: 465        # o 587 si usas STARTTLS
+      EMAIL_SECURE: "true"   # true para 465, false para 587
+      EMAIL_USER: "developlaravel3@gmail.com"
+      EMAIL_PASS: "woca pqrh ebtj cxvo"
+      EMAIL_FROM: "developlaravel3@gmail.com"
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: ./web
+    depends_on:
+      - api-service
+    environment:
+      VITE_API_BASE_URL: http://localhost:4000/api/v1
+    ports:
+      - "5173:5173"
+
+volumes:
+  mysql_data: {}

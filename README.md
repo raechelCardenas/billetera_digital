@@ -18,6 +18,7 @@ Cliente Web ─┬─> API Service (http://localhost:4000/api/v1)
 - Node.js 20+
 - npm 10+
 - MySQL 8 (o compatible con las características usadas)
+- (Opcional) Docker Desktop o Docker Engine para el despliegue con contenedores
 
 ## Configuración de la base de datos
 
@@ -71,6 +72,22 @@ npm run dev   # Servidor Vite en http://localhost:5173
 ```
 
 Configurar `web/.env` si es necesario (por defecto `VITE_API_BASE_URL=http://localhost:4000/api/v1`).
+
+### Opción rápida con Docker Compose
+
+1. **Asegúrate de tener Docker funcionando** (Docker Desktop o Docker Engine + Compose v2).
+2. En la raíz del proyecto ejecuta:
+   ```bash
+   docker compose up --build
+   ```
+   Esto levanta cuatro contenedores:
+   - `mysql`: Base de datos MySQL 8 con los datos persistidos en un volumen.
+   - `db-service`: Servicio interno con Prisma; aplica migraciones automáticamente en el arranque.
+   - `api-service`: API pública que consume al servicio interno.
+   - `web`: Frontend de React servido en modo preview.
+3. Accede a la aplicación en `http://localhost:5173`.
+4. La API pública queda disponible en `http://localhost:4000/api/v1` (útil para Postman u otras herramientas).
+5. Para detener todo, usa `Ctrl+C` y luego `docker compose down` (agrega `-v` si deseas eliminar el volumen de MySQL).
 
 ## Endpoints clave
 
@@ -155,4 +172,3 @@ Todas las operaciones exponen mensajes claros y códigos de negocio (`CLIENT_REG
 - `npm run prisma:migrate` (db-service) – Crea nueva migración (requiere conexión activa a MySQL).
 - `npm run prisma:migrate:deploy` (db-service) – Aplica migraciones existentes a la BD indicada.
 - `npm run dev` – Disponible en los tres proyectos para modo desarrollo con recarga automática.
-
