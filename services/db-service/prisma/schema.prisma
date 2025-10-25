@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id            Int             @id @default(autoincrement())
+  document      String          @unique
+  fullName      String
+  email         String          @unique
+  phone         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  wallet        Wallet?
+  sessions      PaymentSession[]
+  transactions  Transaction[]
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  balance   Decimal  @default(0) @db.Decimal(12, 2)
+  clientId  Int      @unique
+  client    Client   @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaymentSession {
+  id          String               @id @default(uuid())
+  token       String               @db.Char(6)
+  amount      Decimal              @db.Decimal(12, 2)
+  description String?
+  status      PaymentSessionStatus @default(PENDING)
+  expiresAt   DateTime
+  confirmedAt DateTime?
+  clientId    Int
+  client      Client               @relation(fields: [clientId], references: [id])
+  transaction Transaction?
+  createdAt   DateTime             @default(now())
+
+  @@index([clientId, status])
+}
+
+model Transaction {
+  id             Int             @id @default(autoincrement())
+  type           TransactionType
+  amount         Decimal          @db.Decimal(12, 2)
+  description    String?
+  clientId       Int
+  client         Client          @relation(fields: [clientId], references: [id])
+  paymentId      String?          @unique
+  paymentSession PaymentSession? @relation(fields: [paymentId], references: [id])
+  createdAt      DateTime        @default(now())
+}
+
+enum PaymentSessionStatus {
+  PENDING
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
